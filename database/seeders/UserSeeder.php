@@ -23,5 +23,12 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
             'role' => 'user',
         ]);
+
+        User::create([
+            'name' => 'Pemilik Lapangan',
+            'email' => 'owner@ayotanding.com',
+            'password' => Hash::make('password'),
+            'role' => 'owner',
+        ]);
     }
 }

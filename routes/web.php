@@ -30,9 +30,11 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/main', [MainPageController::class, 'mainView'])->name('main')->middleware('auth');
 Route::get('/lapangan/{id}', [MainPageController::class, 'detail'])->name('lapangan.detail');
 
-// Field registration
-Route::get('/daftarkan-lapangan', [LapanganController::class, 'showDaftarLapanganForm'])->name('daftarkan-lapangan');
-Route::post('/daftarkan-lapangan', [LapanganController::class, 'storeLapangan'])->name('storeLapangan');
+// Field registration (owner & admin only)
+Route::middleware(['auth', 'role:owner,admin'])->group(function () {
+    Route::get('/daftarkan-lapangan', [LapanganController::class, 'showDaftarLapanganForm'])->name('daftarkan-lapangan');
+    Route::post('/daftarkan-lapangan', [LapanganController::class, 'storeLapangan'])->name('storeLapangan');
+});
 
 // Cart
 Route::get('/keranjang', [BookingController::class, 'showCart'])->name('keranjang');

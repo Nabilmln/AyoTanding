@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
+    protected $allowedRoles = ['user', 'owner'];
+
     public function showRegistrationForm()
     {
         return view('auth.register');
@@ -18,9 +20,7 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         $this->validator($request->all())->validate();
-
         $this->create($request->all());
-
         return redirect()->route('login')->with('status', 'Registration successful. Please login.');
     }
 
@@ -30,6 +30,7 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'role' => ['required', 'string', 'in:' . implode(',', $this->allowedRoles)],
         ]);
     }
 
@@ -39,7 +40,7 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'role' => 'user', // Default role
+            'role' => $data['role'],
         ]);
     }
 }

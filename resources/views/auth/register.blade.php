@@ -12,7 +12,7 @@
                         <i class="bi bi-person-plus fs-2" style="color: var(--primary);"></i>
                     </div>
                     <h5 class="fw-bold mb-1">Buat Akun Baru</h5>
-                    <p class="text-muted small mb-0">Daftar untuk mulai menyewa lapangan</p>
+                    <p class="text-muted small mb-0">Daftar untuk mulai menggunakan Ayotanding</p>
                 </div>
                 <form method="POST" action="{{ route('register') }}">
                     @csrf
@@ -36,6 +36,26 @@
                             <label for="password_confirmation" class="form-label small fw-semibold">Konfirmasi</label>
                             <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" placeholder="Ulangi password" required>
                         </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label small fw-semibold">Daftar Sebagai</label>
+                        <div class="d-flex gap-3">
+                            <div class="form-check flex-grow-1">
+                                <input class="form-check-input" type="radio" name="role" id="roleUser" value="user" {{ old('role') === 'owner' ? '' : 'checked' }}>
+                                <label class="form-check-label fw-medium" for="roleUser">
+                                    <i class="bi bi-person me-1"></i>Penyewa
+                                    <small class="d-block text-muted fw-normal">Cari & booking lapangan</small>
+                                </label>
+                            </div>
+                            <div class="form-check flex-grow-1">
+                                <input class="form-check-input" type="radio" name="role" id="roleOwner" value="owner" {{ old('role') === 'owner' ? 'checked' : '' }}>
+                                <label class="form-check-label fw-medium" for="roleOwner">
+                                    <i class="bi bi-building me-1"></i>Pemilik
+                                    <small class="d-block text-muted fw-normal">Daftarkan lapanganmu</small>
+                                </label>
+                            </div>
+                        </div>
+                        @error('role')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
                     </div>
                     <button type="submit" class="btn btn-success w-100 py-2 fw-bold">
                         <i class="bi bi-person-check me-1"></i>Daftar

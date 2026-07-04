@@ -226,14 +226,27 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
                     @auth
+                        @php $role = auth()->user()->role; @endphp
                         <li class="nav-item"><a class="nav-link" href="{{ route('main') }}"><i class="bi bi-grid me-1"></i>Main</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ route('keranjang') }}"><i class="bi bi-cart me-1"></i>Keranjang</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ route('daftarkan-lapangan') }}"><i class="bi bi-plus-square me-1"></i>Daftarkan</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ route('tiket') }}"><i class="bi bi-ticket me-1"></i>Tiket</a></li>
+
+                        @if($role === 'user' || $role === 'owner')
+                            <li class="nav-item"><a class="nav-link" href="{{ route('keranjang') }}"><i class="bi bi-cart me-1"></i>Keranjang</a></li>
+                        @endif
+
+                        @if($role === 'owner' || $role === 'admin')
+                            <li class="nav-item"><a class="nav-link" href="{{ route('daftarkan-lapangan') }}"><i class="bi bi-plus-square me-1"></i>Daftarkan</a></li>
+                        @endif
+
+                        @if($role === 'user')
+                            <li class="nav-item"><a class="nav-link" href="{{ route('tiket') }}"><i class="bi bi-ticket me-1"></i>Tiket</a></li>
+                        @endif
+
                         <li class="nav-item"><a class="nav-link" href="{{ route('profile') }}"><i class="bi bi-person me-1"></i>Profil</a></li>
-                        @if(auth()->user() && auth()->user()->role === 'admin')
+
+                        @if($role === 'admin')
                             <li class="nav-item"><a class="nav-link" href="{{ route('admin.dashboard') }}"><i class="bi bi-shield me-1"></i>Admin</a></li>
                         @endif
+
                         <li class="nav-item ms-lg-1">
                             <form method="POST" action="{{ route('logout') }}" class="d-inline">
                                 @csrf

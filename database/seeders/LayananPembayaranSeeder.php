@@ -1,18 +1,14 @@
 <?php
 
+namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
 use App\Models\LayananPembayaran;
 
 class LayananPembayaranSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
+    public function run(): void
     {
-        // Tambahkan item-item default ke dalam tabel layanan_pembayaran
         LayananPembayaran::create(['layanan' => 'BSI']);
         LayananPembayaran::create(['layanan' => 'BCA']);
         LayananPembayaran::create(['layanan' => 'BCA Syariah']);

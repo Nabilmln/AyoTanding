@@ -1,37 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main Page</title>
-</head>
-<body>
-    <div>
-        <a href="{{ route('main') }}">Main</a>
-        <a href="{{ route('keranjang') }}">Keranjang</a>
-        <a href="{{ route('daftarkan-lapangan') }}">Daftarkan Lapangan</a>
-        <a href="{{ route('profile') }}">Profile</a>
-        <a href="{{ route('tiket') }}">Tiket</a>
-        <form method="POST" action="{{ route('logout') }}" style="display: inline;">
-            @csrf
-            <button type="submit">Logout</button>
-        </form>
-    </div>
+@extends('layouts.app')
 
-    <h1>Welcome to Main Page</h1>
-    @if ($lapangans->isEmpty())
-        <p>Tidak ada lapangan yang tersedia saat ini.</p>
-    @else
+@section('title', 'Main — Ayotanding')
+
+@section('content')
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0"><i class="bi bi-grid text-success me-2"></i>Lapangan Tersedia</h4>
+    <span class="badge bg-success rounded-pill">{{ $lapangans->count() }} lapangan</span>
+</div>
+
+@if ($lapangans->isEmpty())
+    <div class="text-center py-5">
+        <i class="bi bi-emoji-frown text-muted" style="font-size: 4rem;"></i>
+        <p class="text-muted mt-3">Tidak ada lapangan yang tersedia saat ini.</p>
+        <a href="{{ route('daftarkan-lapangan') }}" class="btn btn-success">Daftarkan Lapangan</a>
+    </div>
+@else
+    <div class="row g-4">
         @foreach($lapangans as $lapangan)
-            <div>
-            <a href="{{ route('lapangan.detail', $lapangan->id) }}">
-                <img src="{{ asset('storage/field_photos/' . $lapangan->field_photo) }}" alt="Field Photo" style="max-width: 200px">
-                <p>Nama Lapangan: {{ $lapangan->field_name }}</p>
-                <p>Jenis Lapangan: {{ $lapangan->jenisLapangan->nama }}</p>
-                <p>Lokasi: {{ $lapangan->location }}</p>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100">
+                    <img src="{{ asset('storage/' . $lapangan->field_photo) }}" class="card-img-top" alt="{{ $lapangan->field_name }}">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title mb-0">{{ $lapangan->field_name }}</h5>
+                            <span class="badge bg-success bg-opacity-10 text-success">{{ $lapangan->jenisLapangan->nama }}</span>
+                        </div>
+                        <p class="card-text text-muted small mb-2">
+                            <i class="bi bi-geo-alt me-1"></i>{{ $lapangan->location }}
+                        </p>
+                        <p class="card-text text-muted small mb-3">
+                            <i class="bi bi-tag me-1"></i>{{ $lapangan->layananPembayaran->layanan ?? 'Transfer Bank' }}
+                        </p>
+                        <a href="{{ route('lapangan.detail', $lapangan->id) }}" class="btn btn-success w-100">
+                            <i class="bi bi-eye me-1"></i>Lihat Detail
+                        </a>
+                    </div>
+                </div>
             </div>
-            <hr>
         @endforeach
-    @endif
-</body>
-</html>
+    </div>
+@endif
+@endsection

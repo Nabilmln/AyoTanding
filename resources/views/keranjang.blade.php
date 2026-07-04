@@ -1,55 +1,57 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Keranjang Booking</title>
-</head>
-<body>
-<div>
-        <a href="{{ route('main') }}">Main</a>
-        <a href="{{ route('keranjang') }}">Keranjang</a>
-        <a href="{{ route('daftarkan-lapangan') }}">Daftarkan Lapangan</a>
-        <a href="{{ route('profile') }}">Profile</a>
-        <a href="{{ route('tiket') }}">Tiket</a>
-        <form method="POST" action="{{ route('logout') }}" style="display: inline;">
-            @csrf
-            <button type="submit">Logout</button>
-        </form>
-    </div>
+@extends('layouts.app')
 
-    <h1>Keranjang Booking</h1>
-    @if (session('success'))
-        <div>{{ session('success') }}</div>
-    @endif
-    @if($bookings->isEmpty())
-        <p>Keranjang Anda kosong.</p>
-    @else
-        <ul>
-            @foreach($bookings as $booking)
-                <li>
-                    <p>Nama Lapangan: {{ $booking->lapangan->field_name }}</p>
-                    <p>Jenis Lapangan: {{ $booking->lapangan->jenisLapangan->nama }}</p>
-                    <p>Lokasi: {{ $booking->lapangan->location }}</p>
-                    <p>Fase: {{ $booking->fase->jam_mulai }} - {{ $booking->fase->jam_berakhir }}</p>
-                    <p>Tanggal Booking: {{ $booking->booking_date }}</p>
-                    <p>Total Harga: Rp {{ number_format($booking->total_price, 2) }}</p>
-                    
-                    <!-- Formulir untuk menghapus item -->
-                    <form action="{{ route('remove_from_cart', $booking->id) }}" method="post">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit">Hapus</button>
-                    </form>
-                    
-                    <!-- Tombol Bayar untuk masing-masing item -->
-                    <form action="{{ route('checkout', ['bookingId' => $booking->id]) }}" method="post">
-                        @csrf
-                        <button type="submit">Bayar</button>
-                    </form>
-                </li>
-            @endforeach
-        </ul>
-    @endif
-</body>
-</html>
+@section('title', 'Keranjang — Ayotanding')
+
+@section('content')
+<h4 class="mb-4"><i class="bi bi-cart text-success me-2"></i>Keranjang Booking</h4>
+
+@if($bookings->isEmpty())
+    <div class="text-center py-5">
+        <i class="bi bi-cart-x text-muted" style="font-size: 4rem;"></i>
+        <p class="text-muted mt-3">Keranjang Anda kosong.</p>
+        <a href="{{ route('main') }}" class="btn btn-success"><i class="bi bi-grid me-1"></i>Cari Lapangan</a>
+    </div>
+@else
+    <div class="row g-4">
+        @foreach($bookings as $booking)
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title mb-0">{{ $booking->lapangan->field_name }}</h5>
+                            <span class="badge bg-success">Rp{{ number_format($booking->total_price, 0, ',', '.') }}</span>
+                        </div>
+                        <p class="text-muted small mb-1">
+                            <i class="bi bi-geo-alt me-1"></i>{{ $booking->lapangan->location }}
+                        </p>
+                        <p class="text-muted small mb-1">
+                            <i class="bi bi-tag me-1"></i>{{ $booking->lapangan->jenisLapangan->nama }}
+                        </p>
+                        <p class="text-muted small mb-1">
+                            <i class="bi bi-clock me-1"></i>{{ \Carbon\Carbon::parse($booking->fase->jam_mulai)->format('H:i') }} - {{ \Carbon\Carbon::parse($booking->fase->jam_berakhir)->format('H:i') }}
+                        </p>
+                        <p class="text-muted small mb-3">
+                            <i class="bi bi-calendar me-1"></i>{{ \Carbon\Carbon::parse($booking->booking_date)->format('d M Y') }}
+                        </p>
+                        <div class="d-flex gap-2">
+                            <form action="{{ route('checkout', ['bookingId' => $booking->id]) }}" method="post">
+                                @csrf
+                                <button type="submit" class="btn btn-success">
+                                    <i class="bi bi-credit-card me-1"></i>Bayar
+                                </button>
+                            </form>
+                            <form action="{{ route('keranjang.remove', $booking->id) }}" method="post">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Hapus item ini?')">
+                                    <i class="bi bi-trash me-1"></i>Hapus
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+@endif
+@endsection

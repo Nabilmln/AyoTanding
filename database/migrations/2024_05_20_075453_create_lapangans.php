@@ -17,12 +17,13 @@ return new class extends Migration
             $table->string('full_name'); // Nama lengkap pemilik lapangan
             $table->string('phone_number'); // Nomor ponsel pemilik lapangan
             $table->string('email'); // Email pemilik lapangan
-            $table->string('identity_photo'); // Foto identitas pemilik lapangan
-            $table->string('ownership_proof'); // Bukti kepemilikan lapangan
+            $table->string('identity_photo')->nullable(); // Foto identitas pemilik lapangan
+            $table->string('ownership_proof')->nullable(); // Bukti kepemilikan lapangan
             $table->string('payment_option'); // Opsi pembayaran (nomor rekening)
             $table->string('field_name'); // Nama lapangan
             $table->string('location'); // Lokasi lapangan
-            $table->unsignedBigInteger('jenis_lapangan_id'); // ID jenis lapangan
+            $table->unsignedBigInteger('jenis_lapangan_id');
+            $table->unsignedBigInteger('layanan_pembayaran_id')->nullable();
             $table->text('description')->nullable(); // Deskripsi lapangan (opsional)
             $table->string('full_address'); // Alamat lengkap lapangan
             $table->string('field_photo'); // Path atau URL foto lapangan

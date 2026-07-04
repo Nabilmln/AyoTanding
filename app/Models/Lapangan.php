@@ -11,6 +11,7 @@ class Lapangan extends Model
 
     protected $table = 'lapangans';
     protected $fillable = [
+        'user_id',
         'full_name',
         'phone_number',
         'email',
@@ -20,6 +21,7 @@ class Lapangan extends Model
         'field_name',
         'location',
         'jenis_lapangan_id',
+        'layanan_pembayaran_id',
         'description',
         'full_address',
         'field_photo',

@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
             JenisLapanganSeeder::class,
             LayananPembayaranSeeder::class,
             UserSeeder::class,
+            DemoLapanganSeeder::class,
         ]);
     }
 }
